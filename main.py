@@ -11,14 +11,14 @@ from mss.base import MSSBase
 from automation_utils import AutomationUtils
 from image_not_found import ImageNotFound
 
-ARQUIVOS_SALVOS = cv2.imread(str(Path(__file__).parent / 'assets' / 'Arquivos salvos.jpeg'), 0)
-LOCAL_DO_SALVAMENTO = cv2.imread(str(Path(__file__).parent / 'assets' / 'Local do Salvamento.jpeg'), 0)
-MENU = cv2.imread(str(Path(__file__).parent / 'assets' / 'Menu.jpeg'))
-NADA_CONSTA = cv2.imread(str(Path(__file__).parent / 'assets' / 'Nada consta.jpeg'), 0)
-PASTA_JURIDICA = cv2.imread(str(Path(__file__).parent / 'assets' / 'PJ.jpeg'), 0)
-SALVAR_EM_DISCO = cv2.imread(str(Path(__file__).parent / 'assets' / 'Salvar em Disco.jpeg'), 0)
-SUMARIO = cv2.imread(str(Path(__file__).parent / 'assets' / 'Sumário.jpeg'), 0)
-VOLTAR = cv2.imread(str(Path(__file__).parent / 'assets' / 'Voltar.jpeg'))
+ARQUIVOS_SALVOS = cv2.imread(str(Path(__file__).parent / 'assets' / 'Arquivos Salvos.png'), 0)
+LOCAL_DO_SALVAMENTO = cv2.imread(str(Path(__file__).parent / 'assets' / 'Local do Salvamento.png'), 0)
+MENU = cv2.imread(str(Path(__file__).parent / 'assets' / 'Menu.png'), 0)
+NADA_CONSTA = cv2.imread(str(Path(__file__).parent / 'assets' / 'Nada Consta.png'), 0)
+PASTA_JURIDICA = cv2.imread(str(Path(__file__).parent / 'assets' / 'PJ.png'), 0)
+SALVAR_EM_DISCO = cv2.imread(str(Path(__file__).parent / 'assets' / 'Salvar em Disco.png'), 0)
+SUMARIO = cv2.imread(str(Path(__file__).parent / 'assets' / 'Sumário.png'), 0)
+VOLTAR = cv2.imread(str(Path(__file__).parent / 'assets' / 'Voltar.png'), 0)
 
 ULTIMO_VALOR_DE_PJ = 4500
 TENTATIVAS_DE_LOCALIZAR = 3
@@ -52,6 +52,11 @@ def locate_on_screen(image: cv2.typing.MatLike, screen: MSSBase) -> tuple[int, i
             time.sleep(INTERVALO_ENTRE_TENTATIVAS)
     raise ImageNotFound('A Imagem Solicitada NÃO foi Encontrada!')
 
+def send_hotkey() -> None:
+    pyautogui.keyDown('ctrl')
+    pyautogui.press('a')
+    pyautogui.keyUp('ctrl')
+
 
 def main(contador_de_pj: int, busca_sequencial: bool) -> None:
     default_screen = mss.mss()
@@ -66,20 +71,21 @@ def main(contador_de_pj: int, busca_sequencial: bool) -> None:
             x, y, w, h = locate_on_screen(PASTA_JURIDICA, default_screen)
             mouse_coord = AutomationUtils.move_mouse_to((x + w, y, 100, h))
             pyautogui.click(mouse_coord)
+            send_hotkey()
             pyautogui.typewrite(str(contador_de_pj))
             pyautogui.press('enter')
             try:
                 locate_on_screen(NADA_CONSTA, default_screen)
                 logging.info(f'A Pasta Jurídica {contador_de_pj} NÃO foi Encontrada!')
+                pyautogui.press('enter')
                 if busca_sequencial:
                     nao_encontradas.append(contador_de_pj)
                     contador_de_pj += 1
-                    continue
-                contador_de_pj = nao_encontradas.pop()
-                pyautogui.press('enter')
+                else:
+                    contador_de_pj = nao_encontradas.pop()
+                continue
             except ImageNotFound:
-                pass
-            pyautogui.press('enter')
+                pyautogui.press('enter')
             found_coord = locate_on_screen(MENU, default_screen)
             mouse_coord = AutomationUtils.move_mouse_to(found_coord)
             pyautogui.click(mouse_coord)
@@ -92,19 +98,22 @@ def main(contador_de_pj: int, busca_sequencial: bool) -> None:
             mouse_coord = AutomationUtils.move_mouse_to(found_coord)
             pyautogui.click(mouse_coord)
             pyautogui.press('enter')
+            locate_on_screen(ARQUIVOS_SALVOS, default_screen)
+            pyautogui.press('enter')
             logging.info(f'A Pasta Jurídica {contador_de_pj} foi Exportada com SUCESSO!')
             found_coord = locate_on_screen(VOLTAR, default_screen)
             mouse_coord = AutomationUtils.move_mouse_to(found_coord)
             pyautogui.click(mouse_coord)
             if busca_sequencial:
                 contador_de_pj += 1
-                continue
-            contador_de_pj = nao_encontradas.pop()
+            else:
+                contador_de_pj = nao_encontradas.pop()
     except IndexError:
         logging.debug(f'Pastas Jurídias NÃO Encontradas: {nao_encontradas}')
         logging.info('Todas as Pastas Jurídicas Informadas foram PROCESSADAS!')
-    except (ImageNotFound, cv2.error):
+    except (ImageNotFound, cv2.error) as error:
         logging.info('Houve um Problema durante o Fluxo de Exportação!')
+        logging.debug(error)
     except KeyboardInterrupt:
         logging.debug(f'Pastas Jurídias NÃO Encontradas: {nao_encontradas}')
         logging.info('Encerrando as Exportações com SUCESSO!')
@@ -112,4 +121,5 @@ def main(contador_de_pj: int, busca_sequencial: bool) -> None:
 
 if __name__ == '__main__':
     setup_logging()
-    main(1, True)
+    time.sleep(INTERVALO_ENTRE_TENTATIVAS)
+    main(998, True)
