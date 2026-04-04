@@ -1,0 +1,58 @@
+from pathlib import Path
+
+import cv2
+
+ARQUIVOS_SALVOS = cv2.imread(str(Path(__file__).parent / 'assets' / 'Arquivos salvos.jpeg'), 0)
+LOCAL_DO_SALVAMENTO = cv2.imread(str(Path(__file__).parent / 'assets' / 'Local do Salvamento.jpeg'), 0)
+MENU = cv2.imread(str(Path(__file__).parent / 'assets' / 'Menu.jpeg'))
+NADA_CONSTA = cv2.imread(str(Path(__file__).parent / 'assets' / 'Nada consta.jpeg'), 0)
+PASTA_JURIDICA = cv2.imread(str(Path(__file__).parent / 'assets' / 'PJ.jpeg'), 0)
+SALVAR_EM_DISCO = cv2.imread(str(Path(__file__).parent / 'assets' / 'Salvar em Disco.jpeg'), 0)
+SUMARIO = cv2.imread(str(Path(__file__).parent / 'assets' / 'Sumário.jpeg'), 0)
+VOLTAR = cv2.imread(str(Path(__file__).parent / 'assets' / 'Voltar.jpeg'))
+
+TIMEOUT_EM_SECONDS = 30 * 1000
+NAO_ENCONTRADAS = []
+BUSCA_SEQUENCIAL = True
+CONTADOR_DE_PJ = 1
+ULTIMO_VALOR_DE_PJ = 4500
+
+# TODO: Executar para as PJs que Estão ATIVAS
+# TODO: Armazenar os Valores NÃO ENCONTRADOS
+# TODO: Executar para os Valores NÃO ENCONTRADOS nas PJs que Estão INATIVAS
+# TODO: Armazenar os Valores NÃO ENCONTRADOS
+
+def main():
+    try:
+        while True:
+            # TODO: Verificar se BUSCA_SEQUENCIAL e CONTADOR_DE_PJ Maior do Que ULTIMO_VALOR_DE_PJ
+                # TODO: Logging de Encerramento da Execução
+                # TODO: Encerrar o Looping de Execução
+            # TODO: Logging de Inicialização do Processo
+            # TODO: Localizar o Campo PJ e Clicar à DIRETA da Imagens (Quantidade de Pixels a Definir)
+            # TODO: Digitar o Número ATUAL do Contador de PJs e Digitar ENTER
+            # TODO: Verificar se NADA CONSTA
+                # TODO: Logging com a Informação de que NADA CONSTA
+                # TODO: Verificar se BUSCA_SEQUENCIAL
+                    # TODO: Adição de Valor da PJ em NAO_ENCONTRADAS
+                    # TODO: Incrementar o CONTADOR_DE_PJ e Reiniciar o Fluxo
+                # TODO: Atribuir ao CONTADOR_DE_PJ o Próximo Valor de NAO_ENCONTRADAS e Reiniciar o Fluxo
+            # TODO: Digitar ENTER para Abrir a PJ (Validar a Funcionalidade)
+            # TODO: Localizar e Clicar no Menu na Extremidade Direita do CPJ
+            # TODO: Localizar e Mover o Mouse até a Opção de Sumário
+            # TODO: Localizar e Clicar na Opção de SALVAR EM DISCO
+            # TODO: Localizar e Clicar no LOCAL DE SALVAMENTO
+            # TODO: Digitar ENTER para Efetuar o Salvamento (Validar a Funcionalidade)
+            # TODO: Logging de Salvamento com Sucesso
+            # TODO: Localizar e Clicar no Botão de VOLTAR
+            # TODO: Verificar se BUSCA_SEQUENCIAL
+                # TODO: Incrementar o CONTADOR_DE_PJ e Reiniciar o Fluxo
+            # TODO: Atribuir ao CONTADOR_DE_PJ o Próximo Valor de NAO_ENCONTRADAS
+            break
+    except IndexError:
+        # TODO: Logging de Encerramento de Fluxo
+        pass
+
+
+if __name__ == '__main__':
+    main()

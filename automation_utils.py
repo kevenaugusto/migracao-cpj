@@ -6,7 +6,7 @@ from mss.base import MSSBase
 import pyautogui
 
 
-class ImageMatcher:
+class AutomationUtils:
     @staticmethod
     def find_template(template: cv2.typing.MatLike | None, screenshot: MSSBase, monitor: int = 1):
         screen = numpy.array(screenshot.grab(screenshot.monitors[monitor]))
