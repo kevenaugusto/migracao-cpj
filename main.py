@@ -42,12 +42,6 @@ def setup_logging() -> None:
         logging.basicConfig(level=logging.INFO)
 
 
-# TODO: Executar para as PJs que Estão ATIVAS
-# TODO: Armazenar os Valores NÃO ENCONTRADOS
-# TODO: Executar para os Valores NÃO ENCONTRADOS nas PJs que Estão INATIVAS
-# TODO: Armazenar os Valores NÃO ENCONTRADOS
-
-
 def locate_on_screen(image: cv2.typing.MatLike, screen: MSSBase) -> tuple[int, int, Any, Any]:
     for attempt in range(1, TENTATIVAS_DE_LOCALIZAR + 1):
         found_coord = AutomationUtils.find_template(image, screen)
@@ -64,77 +58,55 @@ def main(contador_de_pj: int, busca_sequencial: bool) -> None:
     nao_encontradas = []
     try:
         while True:
-            # TODO: Verificar se BUSCA_SEQUENCIAL e CONTADOR_DE_PJ Maior do Que ULTIMO_VALOR_DE_PJ
             if busca_sequencial and contador_de_pj > ULTIMO_VALOR_DE_PJ:
                 logging.debug(f'Pastas Jurídias NÃO Encontradas: {nao_encontradas}')
-                # TODO: Logging de Encerramento da Execução
                 logging.info('Encerrando as Exportações com SUCESSO!')
-                # TODO: Encerrar o Looping de Execução
                 break
-            # TODO: Logging de Inicialização do Processo
             logging.info(f'Iniciando o Processo de Exportação para a Pasta Jurídica: {contador_de_pj}')
-            # TODO: Localizar o Campo PJ e Clicar à DIRETA da Imagens (Quantidade de Pixels a Definir)
-            found_coord = locate_on_screen(PASTA_JURIDICA, default_screen)
-            AutomationUtils.move_mouse_to(found_coord) # TODO: Somar a Quantidade de Pixels Definida
+            x, y, w, h = locate_on_screen(PASTA_JURIDICA, default_screen)
+            AutomationUtils.move_mouse_to((x + w, y, 100, h))
             pyautogui.click()
-            # TODO: Digitar o Número ATUAL do Contador de PJs e Digitar ENTER
             pyautogui.typewrite(str(contador_de_pj))
             pyautogui.press('enter')
-            # TODO: Verificar se NADA CONSTA
             try:
                 locate_on_screen(NADA_CONSTA, default_screen)
-                # TODO: Logging com a Informação de que NADA CONSTA
                 logging.info(f'A Pasta Jurídica {contador_de_pj} NÃO foi Encontrada!')
-                # TODO: Verificar se BUSCA_SEQUENCIAL
                 if busca_sequencial:
-                    # TODO: Adição de Valor da PJ em NAO_ENCONTRADAS
                     nao_encontradas.append(contador_de_pj)
-                    # TODO: Incrementar o CONTADOR_DE_PJ e Reiniciar o Fluxo
                     contador_de_pj += 1
                     continue
-                # TODO: Atribuir ao CONTADOR_DE_PJ o Próximo Valor de NAO_ENCONTRADAS e Reiniciar o Fluxo
                 contador_de_pj = nao_encontradas.pop()
-                pyautogui.press('enter') # Para Fechar o Pop-up de NADA CONSTA
+                pyautogui.press('enter')
             except ImageNotFound:
                 pass
-            # TODO: Digitar ENTER para Abrir a PJ (Validar a Funcionalidade)
             pyautogui.press('enter')
-            # TODO: Localizar e Clicar no Menu na Extremidade Direita do CPJ
             locate_on_screen(MENU, default_screen)
             pyautogui.click()
-            # TODO: Localizar e Mover o Mouse até a Opção de Sumário
             found_coord = locate_on_screen(SUMARIO, default_screen)
             AutomationUtils.move_mouse_to(found_coord)
-            # TODO: Localizar e Clicar na Opção de SALVAR EM DISCO
             found_coord = locate_on_screen(SALVAR_EM_DISCO, default_screen)
             AutomationUtils.move_mouse_to(found_coord)
             pyautogui.click()
-            # TODO: Localizar e Clicar no LOCAL DE SALVAMENTO
             found_coord = locate_on_screen(LOCAL_DO_SALVAMENTO, default_screen)
             AutomationUtils.move_mouse_to(found_coord)
             pyautogui.click()
-            # TODO: Digitar ENTER para Efetuar o Salvamento (Validar a Funcionalidade)
             pyautogui.press('enter')
-            # TODO: Logging de Salvamento com Sucesso
             logging.info(f'A Pasta Jurídica {contador_de_pj} foi Exportada com SUCESSO!')
-            # TODO: Localizar e Clicar no Botão de VOLTAR
             found_coord = locate_on_screen(VOLTAR, default_screen)
             AutomationUtils.move_mouse_to(found_coord)
             pyautogui.click()
-            # TODO: Verificar se BUSCA_SEQUENCIAL
             if busca_sequencial:
-                # TODO: Incrementar o CONTADOR_DE_PJ e Reiniciar o Fluxo
                 contador_de_pj += 1
                 continue
-            # TODO: Atribuir ao CONTADOR_DE_PJ o Próximo Valor de NAO_ENCONTRADAS
             contador_de_pj = nao_encontradas.pop()
     except IndexError:
         logging.debug(f'Pastas Jurídias NÃO Encontradas: {nao_encontradas}')
-        # TODO: Logging de Encerramento de Fluxo
         logging.info('Todas as Pastas Jurídicas Informadas foram PROCESSADAS!')
-    except ImageNotFound:
-        # TODO: Loggin de Encerramento de Fluxo
+    except (ImageNotFound, cv2.error):
         logging.info('Houve um Problema durante o Fluxo de Exportação!')
+    except KeyboardInterrupt:
+        logging.debug(f'Pastas Jurídias NÃO Encontradas: {nao_encontradas}')
+        logging.info('Encerrando as Exportações com SUCESSO!')
 
 
 if __name__ == '__main__':
