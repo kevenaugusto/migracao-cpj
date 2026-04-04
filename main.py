@@ -64,8 +64,8 @@ def main(contador_de_pj: int, busca_sequencial: bool) -> None:
                 break
             logging.info(f'Iniciando o Processo de Exportação para a Pasta Jurídica: {contador_de_pj}')
             x, y, w, h = locate_on_screen(PASTA_JURIDICA, default_screen)
-            AutomationUtils.move_mouse_to((x + w, y, 100, h))
-            pyautogui.click()
+            mouse_coord = AutomationUtils.move_mouse_to((x + w, y, 100, h))
+            pyautogui.click(mouse_coord)
             pyautogui.typewrite(str(contador_de_pj))
             pyautogui.press('enter')
             try:
@@ -80,21 +80,22 @@ def main(contador_de_pj: int, busca_sequencial: bool) -> None:
             except ImageNotFound:
                 pass
             pyautogui.press('enter')
-            locate_on_screen(MENU, default_screen)
-            pyautogui.click()
+            found_coord = locate_on_screen(MENU, default_screen)
+            mouse_coord = AutomationUtils.move_mouse_to(found_coord)
+            pyautogui.click(mouse_coord)
             found_coord = locate_on_screen(SUMARIO, default_screen)
             AutomationUtils.move_mouse_to(found_coord)
             found_coord = locate_on_screen(SALVAR_EM_DISCO, default_screen)
-            AutomationUtils.move_mouse_to(found_coord)
-            pyautogui.click()
+            mouse_coord = AutomationUtils.move_mouse_to(found_coord)
+            pyautogui.click(mouse_coord)
             found_coord = locate_on_screen(LOCAL_DO_SALVAMENTO, default_screen)
-            AutomationUtils.move_mouse_to(found_coord)
-            pyautogui.click()
+            mouse_coord = AutomationUtils.move_mouse_to(found_coord)
+            pyautogui.click(mouse_coord)
             pyautogui.press('enter')
             logging.info(f'A Pasta Jurídica {contador_de_pj} foi Exportada com SUCESSO!')
             found_coord = locate_on_screen(VOLTAR, default_screen)
-            AutomationUtils.move_mouse_to(found_coord)
-            pyautogui.click()
+            mouse_coord = AutomationUtils.move_mouse_to(found_coord)
+            pyautogui.click(mouse_coord)
             if busca_sequencial:
                 contador_de_pj += 1
                 continue
