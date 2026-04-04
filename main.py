@@ -20,6 +20,8 @@ SALVAR_EM_DISCO = cv2.imread(str(Path(__file__).parent / 'assets' / 'Salvar em D
 SUMARIO = cv2.imread(str(Path(__file__).parent / 'assets' / 'Sumário.png'), 0)
 VOLTAR = cv2.imread(str(Path(__file__).parent / 'assets' / 'Voltar.png'), 0)
 
+ENTER = 'enter'
+
 ULTIMO_VALOR_DE_PJ = 4500
 TENTATIVAS_DE_LOCALIZAR = 3
 INTERVALO_ENTRE_TENTATIVAS = 5
@@ -73,11 +75,11 @@ def main(contador_de_pj: int, busca_sequencial: bool) -> None:
             pyautogui.click(mouse_coord)
             send_hotkey()
             pyautogui.typewrite(str(contador_de_pj))
-            pyautogui.press('enter')
+            pyautogui.press(ENTER)
             try:
                 locate_on_screen(NADA_CONSTA, default_screen)
                 logging.info(f'A Pasta Jurídica {contador_de_pj} NÃO foi Encontrada!')
-                pyautogui.press('enter')
+                pyautogui.press(ENTER)
                 if busca_sequencial:
                     nao_encontradas.append(contador_de_pj)
                     contador_de_pj += 1
@@ -85,7 +87,7 @@ def main(contador_de_pj: int, busca_sequencial: bool) -> None:
                     contador_de_pj = nao_encontradas.pop()
                 continue
             except ImageNotFound:
-                pyautogui.press('enter')
+                pyautogui.press(ENTER)
             found_coord = locate_on_screen(MENU, default_screen)
             mouse_coord = AutomationUtils.move_mouse_to(found_coord)
             pyautogui.click(mouse_coord)
@@ -97,9 +99,9 @@ def main(contador_de_pj: int, busca_sequencial: bool) -> None:
             found_coord = locate_on_screen(LOCAL_DO_SALVAMENTO, default_screen)
             mouse_coord = AutomationUtils.move_mouse_to(found_coord)
             pyautogui.click(mouse_coord)
-            pyautogui.press('enter')
+            pyautogui.press(ENTER)
             locate_on_screen(ARQUIVOS_SALVOS, default_screen)
-            pyautogui.press('enter')
+            pyautogui.press(ENTER)
             logging.info(f'A Pasta Jurídica {contador_de_pj} foi Exportada com SUCESSO!')
             found_coord = locate_on_screen(VOLTAR, default_screen)
             mouse_coord = AutomationUtils.move_mouse_to(found_coord)
