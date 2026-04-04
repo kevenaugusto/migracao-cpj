@@ -8,7 +8,7 @@ import pyautogui
 
 class AutomationUtils:
     @staticmethod
-    def find_template(template: cv2.typing.MatLike | None, screenshot: MSSBase, monitor: int = 1):
+    def find_template(template: cv2.typing.MatLike | None, screenshot: MSSBase, monitor: int = 1) -> tuple[int, int, Any, Any] | None:
         screen = numpy.array(screenshot.grab(screenshot.monitors[monitor]))
         screen_gray = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
         result = cv2.matchTemplate(screen_gray, template, cv2.TM_CCOEFF_NORMED)
@@ -19,7 +19,7 @@ class AutomationUtils:
         return None
 
     @staticmethod
-    def move_mouse_to(found_template: tuple[int, int, Any, Any] | None):
+    def move_mouse_to(found_template: tuple[int, int, Any, Any] | None) -> tuple[Any, Any] | None:
         if found_template is None:
             return None
         x, y, w, h = found_template
