@@ -1,3 +1,4 @@
+import logging.config
 from pathlib import Path
 
 import cv2
@@ -17,12 +18,27 @@ BUSCA_SEQUENCIAL = True
 CONTADOR_DE_PJ = 1
 ULTIMO_VALOR_DE_PJ = 4500
 
+LOG = logging.getLogger('migracao')
+
+def setup_logging() -> None:
+    logging_config = Path(__file__).parent / 'config' / 'logging.ini'
+    if logging_config.exists():
+        logging_dir = Path(__file__).parent / 'logs'
+        logging_dir.mkdir(exist_ok=True)
+        logging.config.fileConfig(
+            logging_config,
+            disable_existing_loggers=False,
+            encoding='utf-8'
+        )
+    else:
+        logging.basicConfig(level=logging.INFO)
+
 # TODO: Executar para as PJs que Estão ATIVAS
 # TODO: Armazenar os Valores NÃO ENCONTRADOS
 # TODO: Executar para os Valores NÃO ENCONTRADOS nas PJs que Estão INATIVAS
 # TODO: Armazenar os Valores NÃO ENCONTRADOS
 
-def main():
+def main() -> None:
     try:
         while True:
             # TODO: Verificar se BUSCA_SEQUENCIAL e CONTADOR_DE_PJ Maior do Que ULTIMO_VALOR_DE_PJ
@@ -55,4 +71,5 @@ def main():
 
 
 if __name__ == '__main__':
+    setup_logging()
     main()
